@@ -65,6 +65,18 @@ fastify.get("/getall", async (request, reply) => {
 
 })
 
+
+//this endpoint is just used to show a particular user from db 
+fastify.get("/getuser", async (request, reply) => {
+
+    const result = await Redisuser.find({ email: "anim29006@gmail.com" })
+
+    console.log(result) // logging the result
+
+    reply.send(result) // sending the user
+
+})
+
 //this is for anim branch 
 
 fastify.listen({ port: 3000 }, (err, address) => {

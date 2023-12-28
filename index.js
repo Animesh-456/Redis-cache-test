@@ -3,10 +3,9 @@ import pkg from 'dotenv';
 pkg.config();
 import Fastify from 'fastify'
 import exportobj from './redi.js';
-import supabase from './db.js';
 import Redisuser from './schema.js';
 import Connection from './db.js';
-import { json } from 'express';
+
 
 
 Connection();

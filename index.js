@@ -3,12 +3,10 @@ import pkg from 'dotenv';
 pkg.config();
 import Fastify from 'fastify'
 import exportobj from './redi.js';
-import supabase from './db.js';
+//import supabase from './db.js';
 import Redisuser from './schema.js';
 import Connection from './db.js';
-import { json } from 'express';
-
-
+//import { json } from 'express';
 Connection();
 const fastify = Fastify({
     logger: false
@@ -78,6 +76,7 @@ fastify.get("/getuser", async (request, reply) => {
 })
 
 //this is for anim branch 
+
 
 fastify.listen({ port: 3000 }, (err, address) => {
     if (err) throw err

@@ -59,6 +59,8 @@ fastify.get("/getall", async (request, reply) => {
 
     const result = await Redisuser.find()
 
+    console.log(result) // logging the result
+
     reply.send(result) // sending the user
 
 })

@@ -65,8 +65,7 @@ fastify.get("/getall", async (request, reply) => {
 
 })
 
-
-
+//this is for anim branch 
 
 fastify.listen({ port: 3000 }, (err, address) => {
     if (err) throw err

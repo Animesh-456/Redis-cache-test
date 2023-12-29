@@ -6,9 +6,6 @@ import exportobj from './redi.js';
 import Redisuser from './schema.js';
 import Connection from './db.js';
 
-
-
-
 Connection();
 const fastify = Fastify({
     logger: false
@@ -65,6 +62,20 @@ fastify.get("/getall", async (request, reply) => {
 
 })
 
+
+
+//this endpoint is just used to show a particular user from db 
+fastify.get("/getuser", async (request, reply) => {
+
+    const result = await Redisuser.find({ email: "anim29006@gmail.com" })
+
+    console.log(result) // logging the result
+
+    reply.send(result) // sending the user
+
+})
+
+
 fastify.post("/addposts", async (request, reply) => {
     const id = request.body.id;
 
@@ -100,7 +111,9 @@ fastify.get("/allpostsbyuser", async (request, reply) => {
 
     reply.send(resp)
 })
+
 //this is for anim branch 
+
 
 fastify.listen({ port: 3000 }, (err, address) => {
     if (err) throw err

@@ -3,10 +3,9 @@ import pkg from 'dotenv';
 pkg.config();
 import Fastify from 'fastify'
 import exportobj from './redi.js';
-//import supabase from './db.js';
 import Redisuser from './schema.js';
 import Connection from './db.js';
-//import { json } from 'express';
+
 Connection();
 const fastify = Fastify({
     logger: false
@@ -64,6 +63,7 @@ fastify.get("/getall", async (request, reply) => {
 })
 
 
+
 //this endpoint is just used to show a particular user from db 
 fastify.get("/getuser", async (request, reply) => {
 
@@ -73,6 +73,43 @@ fastify.get("/getuser", async (request, reply) => {
 
     reply.send(result) // sending the user
 
+})
+
+
+fastify.post("/addposts", async (request, reply) => {
+    const id = request.body.id;
+
+    console.log("the id from postman is ", id)
+    let data =
+    {
+        title: "Post2",
+        description: "This is post 2",
+        user_id: id
+    }
+
+
+    let posts = new post(data)
+    await posts.save()
+
+    reply.send(posts)
+})
+
+
+fastify.get("/allpostsbyuser", async (request, reply) => {
+    const user_id = request.query.id;
+    console.log("the id is :", user_id)
+    let resp = await post.aggregate({
+        user_id: user_id
+    }, {
+        $lookup: {
+            from: "redisuser", // Collection to join
+            localField: "user_id", // Field in the posts collection
+            foreignField: "_id", // Field in the users collection
+            as: "user_details" // Alias for the joined data
+        }
+    })
+
+    reply.send(resp)
 })
 
 //this is for anim branch 

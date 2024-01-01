@@ -3,7 +3,7 @@ import pkg from 'dotenv';
 pkg.config();
 import Fastify from 'fastify'
 import exportobj from './redi.js';
-import Redisuser from './schema.js';
+import { Redisuser, post } from './schema.js';
 import Connection from './db.js';
 
 Connection();
@@ -96,20 +96,33 @@ fastify.post("/addposts", async (request, reply) => {
 
 
 fastify.get("/allpostsbyuser", async (request, reply) => {
-    const user_id = request.query.id;
-    console.log("the id is :", user_id)
-    let resp = await post.aggregate({
-        user_id: user_id
-    }, {
-        $lookup: {
-            from: "redisuser", // Collection to join
-            localField: "user_id", // Field in the posts collection
-            foreignField: "_id", // Field in the users collection
-            as: "user_details" // Alias for the joined data
-        }
-    })
+    //All mongodb commands will be listed 
+    const id = request.query.id;
+    console.log("the id is :", id)
+    const result = await post.aggregate([  //Aggregate
 
-    reply.send(resp)
+        {
+            $lookup: {
+                from: 'redisusers', // Name of the collection to join (users collection in this case)
+                localField: 'user_id', // Field in the posts collection
+                foreignField: '_id', // Field in the users collection
+                as: 'userDetails' // Alias for the joined user details
+            }
+        },
+
+    ]);
+
+    const res = await post.find(); //to get all the posts from post collection 
+
+    const response = await post.find({ title: 'Post1' }).count() //to count the nuber of posts with title post1 
+    //const rep = await post.updateOne({ title: "Post3" }, { description: "This is post 3" }, { upsert: true }) // upsert is used if there is no result found with that title it will create a new one
+    //const rep = await post.findOneAndUpdate({ title: "Post5" }, { $set: { description: "This is a description 5" } }, { upsert: true })
+    //const b = await post.find({ $or: [{ title: 'Post1' }, { description: 'This is post 1' }] })
+
+
+    //const remove = await post.deleteOne({ title: 'Post5' })
+
+    reply.send(res)
 })
 
 //this is for anim branch 
